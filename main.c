@@ -3,29 +3,72 @@
 #include <math.h>
 
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
-struct point{
+int is_whitespace(char c){
+	if (c ==' '||
+		c== '\n'||
+		c==	'\r'||
+		c==	'\t'||
+		c=='(')
+		return 1;
+		
+	return 0;
 	
-	int x;
-	int	y;
-};
+}
 
+int fget_word(FILE* fp, char* word){
+	char c;
+	int cnt;
+	
+	while((c==fgetc(fp))!=EOF){
+		if(is_whitespace(c) == 0)
+		break;
+	}
+	if(c == EOF)
+		return 0;
+		
+	//filling out the word
+	cnt =0;
+	word[cnt++]=c;
+	word[cnt]='\0';
+	
+	while((word[cnt]=fgetc(fp))!=EOF){
+		if(is_whitespace(word[cnt])==1){
+			word[cnt]='\0';
+			break;
+			
+		}
+		cnt++;
+	}
+	return cnt;
+}
 
 
 int main(int argc, char *argv[]) {
-	struct point p1,p2;
-	int xdiff, ydiff;
-	float dist;
-	
-	printf("intput p1 coordinate (x y) : ");
-	scanf("%d %d", &p1.x, &p1.y);
 
-	printf("intput p2 coordinate (x y) : ");
-	scanf("%d %d", &p2.x, &p2.y);
+	FILE* fp;
+	char filename[100];
+	char word[100];
+	int cnt;
 	
-	xdiff=(&p2.x-&p1.x);
-	ydiff=(&p1.y-&p2.y);
-	dist =sqrt(xdiff*xdiff+ydiff*ydiff);
-	printf("%f",dist);
+	//file open
+	printf("input the file name : ");
+	scanf("%s", filename);
+	
+	if((fp = fopen(filename, "r"))==NULL)
+	{
+		printf("input filename is invalid\n");
+		return -1;
+	}
+	
+	//bring word from fp
+	while(fget_word(fp, word) != 0){	//bring a word
+		count_word(word);
+	}
+	
+	print_word();
+	
+	fclose(fp);
+	
 	
 	return 0;
 }
